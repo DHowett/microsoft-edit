@@ -1,0 +1,31 @@
+name: Release (macOS)
+
+env:
+  CARGO_TERM_COLOR: always
+
+on: workflow_dispatch
+
+jobs:
+  check:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Rust
+        run: rustup toolchain install nightly --no-self-update --profile minimal --component rust-src,rustfmt,clippy
+      - name: Build
+        run: cargo build --config .cargo/release.toml --frozen --release
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-macos
+          path: |
+            target
+            !target/**/*.o
+            !target/**/*.lib
+            !target/**/*.rlib
