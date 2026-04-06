@@ -19,7 +19,7 @@ jobs:
       - name: Install Rust
         run: rustup toolchain install nightly --no-self-update --profile minimal --component rust-src,rustfmt,clippy
       - name: Build
-        run: cargo build --config .cargo/release.toml --release
+        run: cargo +nightly build --config .cargo/release.toml --release
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
